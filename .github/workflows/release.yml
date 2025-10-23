@@ -1,0 +1,46 @@
+name: Build & Release Apps
+
+on:
+  push:
+    tags:
+      - "v*"        # builds when you push a tag like v1.0.0
+  workflow_dispatch:  # lets you run it manually from GitHub
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build macOS app
+        run: |
+          pyinstaller --windowed --name "QR Maker" qr_gui.py
+          cd dist && zip -r "QR-Maker-mac.zip" "QR Maker.app"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QR-Maker-mac
+          path: dist/QR-Maker-mac.zip
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build Windows EXE
+        run: pyinstaller --windowed --onefile --name "QR Maker" qr_gui.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QR-Maker-windows
+          path: dist/QR Maker.exe
