@@ -20,7 +20,7 @@ jobs:
           pip install -r requirements.txt pyinstaller
       - name: Build macOS app
         run: |
-          pyinstaller --windowed --name "QR Maker" qr_gui.py
+          pyinstaller --windowed --name "QR Maker" gui.py
           cd dist && zip -r "QR-Maker-mac.zip" "QR Maker.app"
       - uses: actions/upload-artifact@v4
         with:
@@ -39,7 +39,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt pyinstaller
       - name: Build Windows EXE
-        run: pyinstaller --windowed --onefile --name "QR Maker" qr_gui.py
+        run: pyinstaller --windowed --onefile --name "QR Maker" gui.py
       - uses: actions/upload-artifact@v4
         with:
           name: QR-Maker-windows
